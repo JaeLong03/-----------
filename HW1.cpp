@@ -1,7 +1,9 @@
-#include <iostream>
-using namespace std;
+// 이재환 22400583
 
-class weight{ 
+#include <iostream>
+using namespace std;   
+
+class Weight{ 
     int kg, gram; 
 
     public: 
@@ -11,26 +13,26 @@ class weight{
     void add_grams(int n); 
 }; 
 
-void weight:: set_weight(int n1, int n2){
+void Weight:: set_weight(int n1, int n2){
     kg = n1; 
     gram = n2; 
 }
 
-int weight:: get_weight(){ 
+int Weight:: get_weight(){ 
     int result; 
     
     result = kg * 1000 + gram; 
     return result; 
 }
 
-bool weight:: isheavy(){ 
+bool Weight:: isheavy(){ 
     if(kg >= 10)
         return true; 
     else
         return false; 
 }
 
-void weight:: add_grams(int n){ 
+void Weight:: add_grams(int n){ 
     gram += n; 
     if(gram >= 1000){ 
         kg++; 
@@ -39,11 +41,11 @@ void weight:: add_grams(int n){
 }
 
 
-weight add_weight(weight w1, weight w2); 
+Weight add_weight(Weight w1, Weight w2); 
 
 
 int main(){ 
-    weight w1, w2, w3; 
+    Weight w1, w2, w3; 
     w1.set_weight(12, 800);
     if(w1.isheavy())
         cout << "Heavy.\n"; 
@@ -57,8 +59,8 @@ int main(){
     cout << w3.get_weight() << " grams\n"; 
 }
 
-weight add_weight(weight w1, weight w2){ 
-    weight w3; 
+Weight add_weight(Weight w1, Weight w2){ 
+    Weight w3; 
 
     int sum = w1.get_weight() + w2.get_weight(); 
     w3.set_weight(sum/1000, sum%1000); 
