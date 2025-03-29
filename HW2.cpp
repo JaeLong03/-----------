@@ -54,38 +54,35 @@ int main(){
     
     stack1 = op_stack(); 
     stack1.push(EOS); 
-    for(i = 0; i < input.size(); i++){ 
-        if(is_operand(input[i])){ 
-            output += input[i]; 
-        }
-        else{ 
-            if(input[i] == '('){ 
-                stack1.push(input[i]); 
-            }
-            else if(input[i] == ')'){ 
-                while(stack1.top_element() != '('){ 
-                    output += stack1.pop(); 
-                } 
-                stack1.pop(); 
-            }
-            else if(get_precedence(input[i]) < get_precedence(stack1.top_element())){
-                while(get_precedence(input[i]) < get_precedence(stack1.top_element())){ 
-                    output += stack1.pop(); 
+    for (i = 0; i < input.size(); i++) {
+        if(input[i] == EOS)
+            break;
+
+        if (is_operand(input[i])) {
+            output += input[i];
+        } else {
+            if (input[i] == '(') {
+                stack1.push(input[i]);
+            } else if (input[i] == ')') {
+                while (!stack1.empty() && stack1.top_element() != '(') {
+                    output += stack1.pop();
+                }
+                if (!stack1.empty()) stack1.pop();
+            } else {
+                while (!stack1.empty() && get_precedence(input[i]) <= get_precedence(stack1.top_element())) {
+                    output += stack1.pop();
                 }
                 stack1.push(input[i]);
             }
-            else{ 
-                stack1.push(input[i]); 
-            }
-
         }
+    }
 
-        cout << stack1.top_element() << "\t" << output << endl;
-        
+    while (!stack1.empty() && stack1.top_element() != EOS) {
+        output += stack1.pop();
     }
 
 
-    cout << output; 
+    cout << output << endl; 
     return 0; 
 }
 
