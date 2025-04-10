@@ -100,9 +100,9 @@ int my_list:: remove_a_node(string tname){
     node *prev; 
     for (t = head; t != NULL; t = t->link){ 
         if (t->name == tname){
-            if (prev == NULL) { // 첫 번째 노드를 삭제할 경우
+            if (prev == NULL) { 
                 head = t->link;
-                if (t == tail) // 리스트에 하나만 있었던 경우
+                if (t == tail) 
                     tail = NULL;
             } else {
                 prev->link = t->link;
@@ -110,7 +110,7 @@ int my_list:: remove_a_node(string tname){
                     tail = prev;
             }
             delete t;
-            return 1; // 삭제 성공
+            return 1; 
         }
         prev = t;
     }
@@ -125,11 +125,12 @@ int main( ){
     a.add_to_head(tmp);
     tmp.set_data("Lee", 78.2);
     a.add_to_head(tmp);           // head 위치로 2개의 원소 추가
-    cout << a.num_nodes() << ":" << a.score_sum() << endl;  // 1단계 점검
+    cout << a.num_nodes() << " : " << a.score_sum() << endl;  // 1단계 점검
     tmp.set_data("Park", 91.3);   
     a.add_to_tail(tmp);             // tail 위치로 1개의 원소 추가
     cout << a.num_nodes() << " : " << a.score_sum() << endl;  //2단계 점검
-    tmp = a.delete_from_head();cout << tmp.name << "is delted.\n";   // 3단계 점검
+    tmp = a.delete_from_head();
+    cout << tmp.name << " is delted.\n";   // 3단계 점검
     tmp.set_data("Choi", 85.1);   
     a.add_to_tail(tmp);              
     tmp.set_data("Ryu", 94.3);   
