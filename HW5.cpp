@@ -10,6 +10,45 @@ class node{
         void set_data(string tname, double n); 
 }; 
 
+void node:: set_data(string tname, double n){ 
+    name = tname; 
+    score = n; 
+}
+
+
+class nstack {
+    public:
+        node* stack[100];
+        int top;
+        nstack(); 
+        bool stack_empty(); 
+        void push(node* t); 
+        node* pop(); 
+};
+
+nstack:: nstack(){ 
+    top = 0; 
+}
+
+bool nstack:: stack_empty(){ 
+    return top == 0; 
+}
+
+void nstack:: push(node*t){ 
+    if (top == 100) return; 
+    stack[top] = t;
+    top++; 
+}
+
+node* nstack:: pop(){ 
+    if (stack_empty()) return NULL; 
+    return stack[--top];
+}
+
+class my_queue{ 
+
+}; 
+
 class my_tree{ 
     public: 
         int node_count; 
@@ -19,24 +58,17 @@ class my_tree{
         int insert_left(string name, node t); 
         int insert_right(string name, node t); 
 
-        double score_sum(); 
-        double score_average(); 
-        void print_data_inorder(); 
-        void print_data_preorder(); 
-        void print_data_postorder(); 
+        void print_data_inorder();
+        void nonrecursive_inorder();
+        void print_data_levelorder();
+        void copy_tree(my_tree t1, my_tree t2); 
+        bool equal_tree(my_tree t1, my_tree t2); 
 }; 
-
-void node:: set_data(string tname, double n){ 
-    name = tname; 
-    score = n; 
-}
 
 int node_insert_left(node* p, string tname, node tnode);
 int node_insert_right(node* p, string tname, node tnode);
-double sum_allnodes(node *t); 
 void printInorder(node *t); 
-void printPreorder(node *t); 
-void printPostorder(node *t); 
+void printNon(node *t); 
 
 my_tree:: my_tree(){ 
     node_count = 0; 
@@ -71,24 +103,38 @@ int my_tree:: insert_right(string name, node t){
     return result; 
 }
 
-double my_tree:: score_sum(){
-    return sum_allnodes(root); 
-}
-
-double my_tree:: score_average(){ 
-    return sum_allnodes(root) / node_count;
-}
-
 void my_tree:: print_data_inorder(){ 
     printInorder(root); 
 }
 
-void my_tree:: print_data_preorder(){ 
-    printPreorder(root); 
+void my_tree:: nonrecursive_inorder(){ 
+    nstack s1;
+    node *t;
+    t = root;
+    while (1){
+        while (t != NULL) {
+            s1.push(t);
+            t = t->left;
+        }
+        if (s1.stack_empty() ) return;
+        t = s1.pop();
+        cout << t->name << " : " << t->score << endl;
+        t = t->right;
+    }
 }
 
-void my_tree:: print_data_postorder(){ 
-    printPostorder(root); 
+void my_tree:: print_data_levelorder(){ 
+    my_queue a1; 
+    node *t; 
+    if(root == NULL) return; 
+    a1.insert_q(root); 
+    while(1){ 
+        if(a1.q_empty()) return; 
+        t = a1.delete_q(); 
+        cout << t->name << ":" << t->score << endl; 
+        if(t->left != NULL) a1.insert_q(t->left); 
+        if(t->right != NULL) a1.insert_q(t->right); 
+    }
 }
 
 int main(){
@@ -99,31 +145,38 @@ int main(){
     thetree.insert_root(tmp);
     tmp.set_data("Lee", 6.5);
     thetree.insert_left("Kim", tmp);
-    
     tmp.set_data("Park", 8.3);
     thetree.insert_right("Kim", tmp);
-    
     tmp.set_data("Choi", 7.2);
     thetree.insert_left("Lee", tmp);
-    
     tmp.set_data("Ryu", 9.0);
     thetree.insert_right("Lee", tmp);
-    
     tmp.set_data("Cho", 7.7);
     thetree.insert_right("Park", tmp);
     
-    cout<< "Score Sum : " << thetree.score_sum() << "\n";
-    cout<< "Score Average : " << thetree.score_average() << "\n";
+    cout << "\nNon-recursive Inorder Result \n";
+    thetree.nonrecursive_inorder();
     
-    cout <<"\nInorder Traversal Result \n";
-    thetree.print_data_inorder();
-    cout << "\nPreorder Traversal Result \n";
-    thetree.print_data_preorder();
-    cout << "\nPostorder Traversal Result \n";
-    thetree.print_data_postorder();
+    /*cout << "\nLevel-Order traversal Result \n";
+    thetree.print_data_levelorder();
+    
+    my_tree tree2;
+    copy_tree(tree2, thetree);
+    cout << "\nThe inorder traversal Result of the new tree \n";
+    tree2.print_data_inorder();
+    
+    if (equal_tree(tree2, thetree) ) cout << "Yes\n";
+    else cout << "No\n";
+    
+    tmp.set_data("Youn", 7.7);
+    thetree.insert_right("Cho", tmp);
+    if (equal_tree(tree2, thetree) ) cout << "Yes\n";
+    else cout << "No\n";
+    */
+
     return 0;
 
-}       
+}      
 
 int node_insert_left(node* p, string tname, node tnode){ 
     if(p == NULL) return 0; 
@@ -165,30 +218,10 @@ int node_insert_right(node* p, string tname, node tnode){
     }
 }
 
-double sum_allnodes(node *t){ 
-    if(t == NULL) return 0; 
-    return sum_allnodes(t->left) + t->score + sum_allnodes(t->right); 
-}
-
 void printInorder(node *t){ 
     if (t == NULL) return;
     printInorder(t->left); 
     cout << t->name << " " << t->score << endl; 
     printInorder(t->right); 
 }
-
-void printPreorder(node *t){ 
-    if (t == NULL) return;
-    cout << t->name << " " << t->score << endl; 
-    printPreorder(t->left); 
-    printPreorder(t->right); 
-}
-
-void printPostorder(node *t){ 
-    if (t == NULL) return;
-    printPostorder(t->left); 
-    printPostorder(t->right); 
-    cout << t->name << " " << t->score << endl; 
-}
-
 
