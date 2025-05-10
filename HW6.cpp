@@ -30,6 +30,9 @@ class my_tree{
 
 int node_insert_left(node* p, string tname, node tnode);
 int node_insert_right(node* p, string tname, node tnode);
+int d2_node(node *p); 
+int d1_node(node *p); 
+int leaf_node(node *p); 
 
 my_tree:: my_tree(){ 
     node_count = 0; 
@@ -64,6 +67,23 @@ int my_tree:: insert_right(string name, node t){
     return result; 
 }
 
+int my_tree:: n_d2_nodes(){ 
+    int cnt = 0; 
+    cnt = d2_node(root); 
+    return cnt; 
+}
+
+int my_tree:: n_d1_nodes(){ 
+    int cnt = 0; 
+    cnt = d1_node(root); 
+    return cnt; 
+}
+
+int my_tree:: n_leaf_nodes(){ 
+    int cnt = 0; 
+    cnt = leaf_node(root); 
+    return cnt; 
+}
 
 int main()
 {
@@ -132,4 +152,33 @@ int node_insert_right(node* p, string tname, node tnode){
             return result; 
         return node_insert_right(p->left, tname, tnode); 
     }
+}
+
+int d2_node(node *p){ 
+    if(p == NULL) 
+        return 0; 
+    if(p->left != NULL && p->right != NULL) 
+        return d2_node(p->left) + d2_node(p->right) + 1; 
+    else 
+        return d2_node(p->left) + d2_node(p->right); 
+}
+
+int d1_node(node *p){ 
+    if(p == NULL) 
+        return 0; 
+    if(p->left != NULL && p->right == NULL) 
+        return d1_node(p->left) + d1_node(p->right) + 1; 
+    else if(p->left == NULL && p->right != NULL) 
+        return d1_node(p->left) + d1_node(p->right) + 1; 
+    else 
+        return d1_node(p->left) + d1_node(p->right); 
+}
+
+int leaf_node(node *p){ 
+    if(p == NULL) 
+        return 0; 
+    if(p->left == NULL && p->right == NULL) 
+        return leaf_node(p->left) + leaf_node(p->right) + 1; 
+    else 
+        return leaf_node(p->left) + leaf_node(p->right); 
 }
