@@ -46,8 +46,39 @@ node* nstack:: pop(){
 }
 
 class my_queue{ 
-
+    public: 
+        int front, rear; 
+        node* Q[100]; 
+        my_queue(); 
+        void insert_q(node *t);
+        node *delete_q(); 
+        bool q_empty(); 
 }; 
+
+my_queue:: my_queue(){ 
+    front = rear = 0;
+}
+
+void my_queue:: insert_q(node *t){ 
+    if(!((rear +1)%100 == front)){ 
+        Q[rear] = t; 
+        rear = (rear +1)%100; 
+    }
+}
+
+bool my_queue:: q_empty(){ 
+    if(rear == front) return true; 
+    else return false; 
+}
+
+node* my_queue:: delete_q(){ 
+    node* tmp; 
+    if(!q_empty()){ 
+        tmp = Q[front]; 
+        front = (front+1) % 100; 
+    }
+    return tmp; 
+}
 
 class my_tree{ 
     public: 
@@ -61,14 +92,16 @@ class my_tree{
         void print_data_inorder();
         void nonrecursive_inorder();
         void print_data_levelorder();
-        void copy_tree(my_tree t1, my_tree t2); 
-        bool equal_tree(my_tree t1, my_tree t2); 
 }; 
 
 int node_insert_left(node* p, string tname, node tnode);
 int node_insert_right(node* p, string tname, node tnode);
 void printInorder(node *t); 
 void printNon(node *t); 
+void copy_tree(my_tree &t1, my_tree t2); 
+node* make_copy(node *p); 
+bool equal_tree(my_tree t1, my_tree t2); 
+bool equal_test(node *p1, node*p2); 
 
 my_tree:: my_tree(){ 
     node_count = 0; 
@@ -137,6 +170,7 @@ void my_tree:: print_data_levelorder(){
     }
 }
 
+
 int main(){
     my_tree  thetree;
     node  tmp;
@@ -157,7 +191,7 @@ int main(){
     cout << "\nNon-recursive Inorder Result \n";
     thetree.nonrecursive_inorder();
     
-    /*cout << "\nLevel-Order traversal Result \n";
+    cout << "\nLevel-Order traversal Result \n";
     thetree.print_data_levelorder();
     
     my_tree tree2;
@@ -172,7 +206,6 @@ int main(){
     thetree.insert_right("Cho", tmp);
     if (equal_tree(tree2, thetree) ) cout << "Yes\n";
     else cout << "No\n";
-    */
 
     return 0;
 
@@ -225,3 +258,35 @@ void printInorder(node *t){
     printInorder(t->right); 
 }
 
+
+void copy_tree(my_tree &t1, my_tree t2){ 
+    t1.node_count = t2.node_count; 
+    t1.root = make_copy(t2.root); 
+}
+
+node* make_copy(node *p){ 
+    node *t; 
+
+    if(p == NULL) return NULL; 
+    t = new node;
+    *t = *p; 
+    t->left = make_copy(p->left); 
+    t->right = make_copy(p->right); 
+    return t; 
+}
+
+bool equal_tree(my_tree t1, my_tree t2){ 
+    if(t1.node_count!= t2.node_count) return false; 
+    return equal_test(t1.root, t2.root); 
+}
+
+bool equal_test(node *p1, node*p2){ 
+    if((p1 == NULL) && (p2 == NULL)) return true; 
+    if(p1 == NULL) return false; 
+    if(p2 == NULL) return false; 
+    if(p1->name != p2->name) return false; 
+    if(p1->score != p2->score) return false; 
+
+    if(equal_test(p1->left, p2->left) && equal_test(p1->right, p2->right)) return true; 
+    else return false; 
+}
